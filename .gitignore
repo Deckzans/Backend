@@ -1,0 +1,10 @@
+# Node.js
+node_modules/
+
+# Prisma
+prisma/.env
+prisma/migrations/
+!prisma/migrations/README.md # Excepto el README.md dentro de prisma/migrations
+
+# Keep environment variables out of version control
+.env
