@@ -13,7 +13,16 @@ const router = Router(); +
 router.post('/agregar', async (req, res) => {
     try {
         const nuevoUsuario = await usuarioServices.crearUsuario(req.body)
-        responsesUtiles.OperacionExitosa(res, nuevoUsuario)
+        console.log(nuevoUsuario)
+        //devolucion de respuesta
+        const respuesta =
+            nuevoUsuario === 'clave_unica'
+                ? responsesUtiles.manejarError(res, 'Nombre de usuario duplicado')
+                : nuevoUsuario
+                    ? responsesUtiles.OperacionExitosa(res, nuevoUsuario, 'Usuario agregado exitosamente')
+                    : responsesUtiles.manejarError(res, 'Error al agregar el usuario');
+                return respuesta;
+        //fin de devoluccion de respuesta
     } catch (error) {
         responsesUtiles.manejarError(res, error, 'error al intentar agregar un nuevo usuario')
     }
@@ -28,7 +37,7 @@ router.delete('/eliminar/:id', async (req, res) => {
         if (usuarioEliminado === null) {
             responsesUtiles.manejarEntidadNoEncontrada(res, id);
         } else if (usuarioEliminado !== true) {
-            responsesUtiles.OperacionExitosa(res,usuarioEliminado,'Usuario eliminado exitosamente');
+            responsesUtiles.OperacionExitosa(res, usuarioEliminado, 'Usuario eliminado exitosamente');
         } else {
             responsesUtiles.manejarError(res, 'Error al eliminar el usuario');
         }
@@ -42,7 +51,7 @@ router.get('/obtenerTodo', async (req, res) => {
 
     try {
         const obtenerUsuarios = await usuarioServices.obtenerUsuarios()
-            responsesUtiles.OperacionExitosa(res,obtenerUsuarios)
+        responsesUtiles.OperacionExitosa(res, obtenerUsuarios)
     } catch (error) {
         responsesUtiles.manejarError(res, error, 'error al intentar obtener todos los usuarios')
     }
@@ -58,7 +67,7 @@ router.get('/obtener/:id', async (req, res) => {
         if (obtenerUsuario === null) {
             responsesUtiles.manejarEntidadNoEncontrada(res, id);
         } else if (obtenerUsuario !== true) {
-            responsesUtiles.OperacionExitosa(res,obtenerUsuario,'Usuario obtenido exitosamente');
+            responsesUtiles.OperacionExitosa(res, obtenerUsuario, 'Usuario obtenido exitosamente');
         } else {
             responsesUtiles.manejarError(res, 'Error al obtener el usuario');
         }
@@ -82,11 +91,11 @@ router.put('/editar/:id', async (req, res) => {
             if (usuarioEditado === null) {
                 responsesUtiles.manejarEntidadNoEncontrada(res, id);
             } else if (usuarioEditado !== true) {
-                responsesUtiles.OperacionExitosa(res,usuarioEditado,'Usuario editado correctamente');
+                responsesUtiles.OperacionExitosa(res, usuarioEditado, 'Usuario editado correctamente');
             } else {
                 responsesUtiles.manejarError(res, 'Error al editar el usuario');
             }
-        } 
+        }
     } catch (error) {
         console.error(`Error al intentar editar el usuario ${id}: ${error.message}`);
         responsesUtiles.manejarError(res, error, `error al intentar editar el usuario ${id} `)
