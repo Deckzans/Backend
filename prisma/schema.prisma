@@ -108,9 +108,7 @@ model Empleado {
   estadocivil   EstadoCivil? @relation(fields: [estadocivilid], references: [id])
   estadocivilid Int?
   
-
   // Relaciones con otros modelos
-
   //Relaciones con las que interactuan un empleado
   formacion Formacion[]
   incapacidad incapacidad[]
