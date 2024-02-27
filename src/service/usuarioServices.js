@@ -21,3 +21,18 @@ export const obtenerUsuario = async (idUser) => {
 export const editarUsuario = async (idUser,datosNew) => { 
   return crudService.editarRegistroPorId(usuarioModel,idUser,datosNew)
 } 
+
+//parte del login
+export const obtenerUsuarioPorNombre = async (nombreUsuario) => {
+  try {
+    const usuario = await usuarioModel.findUnique({
+      where: {
+        usuario: nombreUsuario,
+      },
+    });
+    return usuario;
+  } catch (error) {
+    console.error(`Error al obtener el usuario por nombre de usuario: ${error.message}`);
+    return null;
+  }
+};

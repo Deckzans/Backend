@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start" :"node /src/index.js"
+    "start": "node /src/index.js"
   },
   "author": "David Zamora Salinas",
   "license": "ISC",
@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@prisma/client": "^5.9.1",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.0.3"
   }
 }

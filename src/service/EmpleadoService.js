@@ -11,8 +11,24 @@ export const eliminarEmpleado = async (idUser) => {
 }
 
 export const obtenerEmpleados = async () => {
-  return crudService.obtenerTodosLosRegistros(empleadoModel)
-}
+  try {
+    const registros = await empleadoModel.findMany({
+      include: {
+        area: {
+          select: {
+            descripcion: true, // Incluir solo el campo 'id' del modelo 'Area'
+          },
+        },
+        // Otras relaciones que desees incluir
+      },
+    });
+
+    return registros;
+  } catch (error) {
+    console.error(`Error al intentar obtener todos los registros: ${error.message}`);
+    return null;
+  }
+};
 
 export const obtenerEmpleado = async (idUser) => {
   return crudService.obtenerRegistroPorId(empleadoModel, idUser)

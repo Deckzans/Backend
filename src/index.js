@@ -1,5 +1,6 @@
 //Importacciones externos
-import express from 'express'
+import express from 'express';
+import cors from 'cors'
 
 
 //rutas de aplicacion 
@@ -10,7 +11,8 @@ import empleadoRoutes from './routes/empleado.routes.js'
 const app = express();
 
 //middlewares externos 
-app.use(express.json())
+app.use(express.json());
+app.use(cors());
 
 //middlewares internos0
 app.use('/usuario',usuariosRoutes)

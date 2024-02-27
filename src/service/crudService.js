@@ -95,3 +95,4 @@ export const editarRegistroPorId = async (modelo, id, nuevosDatos) => {
     return null;
   }
 };
+

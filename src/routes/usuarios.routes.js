@@ -1,10 +1,11 @@
-import { Router } from 'express';
+import { Router, json } from 'express';
 import { usuarioServices } from '../service/index.js'
 import { responsesUtiles } from '../utils/index.js'
+import jwt from 'jsonwebtoken';
 
 const router = Router(); +
 
-    router.get('/usuarios', (req, res) => {
+    router.get('/', (req, res) => {
         res.send('Hola desde usuariosRouter')
     })
 
@@ -17,11 +18,11 @@ router.post('/agregar', async (req, res) => {
         //devolucion de respuesta
         const respuesta =
             nuevoUsuario === 'clave_unica'
-                ? responsesUtiles.manejarError(res, 'Nombre de usuario duplicado')
+                ? responsesUtiles.manejarError(res, 'Nombre de usuario duplicado', "el usuario esta duplicado",409)
                 : nuevoUsuario
                     ? responsesUtiles.OperacionExitosa(res, nuevoUsuario, 'Usuario agregado exitosamente')
                     : responsesUtiles.manejarError(res, 'Error al agregar el usuario');
-                return respuesta;
+        return respuesta;
         //fin de devoluccion de respuesta
     } catch (error) {
         responsesUtiles.manejarError(res, error, 'error al intentar agregar un nuevo usuario')
@@ -102,6 +103,77 @@ router.put('/editar/:id', async (req, res) => {
     }
 });
 
+
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const usuario = await usuarioServices.obtenerUsuarioPorNombre(username);
+
+        if (usuario && usuario.password === password) {
+            // ... Código para generar el token y enviar una respuesta exitosa ...
+            const token = jwt.sign({
+                usuarioId: usuario.id,
+                usuario: usuario.usuario,
+                rol: usuario.rol,
+            }, "pachanga la changa", { expiresIn: '1h' });
+
+            res.status(200).json({
+                success: true,
+                mensaje: 'Inicio de sesión exitoso',
+                data: {
+                    token,
+                    usuario: usuario.usuario,
+                    rol: usuario.rol,
+                },
+            });
+        } else {
+            // Enviar una respuesta 401 (Unauthorized) cuando las credenciales no coinciden
+            res.status(401).json({
+                success: false,
+                mensaje: 'Nombre de usuario o contraseña incorrectos',
+                error: null,
+            });
+        }
+    } catch (error) {
+        console.error(`Error al intentar iniciar sesión: ${error.message}`);
+        // Manejar otros errores y enviar una respuesta 500 (Internal Server Error)
+        res.status(500).json({
+            success: false,
+            mensaje: 'Error al intentar iniciar sesión',
+            error: error.message || error,
+        });
+    }
+});
+
+// Ruta para verificar token
+router.post('/verificar-token', (req, res) => {
+    const { token } = req.body;
+  
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        mensaje: 'Token no proporcionado en el cuerpo de la solicitud',
+        error: null,
+      });
+    }
+  
+    try {
+      // Verificar el token con la misma clave secreta utilizada para firmar el token
+      jwt.verify(token, 'pachanga la changa');
+  
+      res.status(200).json({
+        success: true,
+        mensaje: 'Token válido',
+      });
+    } catch (error) {
+      console.error(`Error al verificar el token: ${error.message}`);
+      return res.status(401).json({
+        success: false,
+        mensaje: 'Token no válido',
+        error: error.message,
+      });
+    }
+  });
 
 
 
