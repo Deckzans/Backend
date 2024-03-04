@@ -6,9 +6,18 @@ import cors from 'cors'
 //rutas de aplicacion 
 import usuariosRoutes from './routes/usuarios.routes.js'
 import empleadoRoutes from './routes/empleado.routes.js'
+// import multer from 'multer';
+// const upload = multer({ dest: 'uploads/' });
 
 //creacion de la aplicacion de express
 const app = express();
+
+// app.post('/imagenes/single', uploadImagen.single('imagen'), (req, res) => {
+//     // Verifica si la imagen se ha subido correctamente
+//      console.log(req.body)
+//     console.log(req.file)
+//     res.send('termina')
+//   });
 
 //middlewares externos 
 app.use(express.json());

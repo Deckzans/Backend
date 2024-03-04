@@ -124,6 +124,7 @@ router.post('/login', async (req, res) => {
                     token,
                     usuario: usuario.usuario,
                     rol: usuario.rol,
+                    id: usuario.id
                 },
             });
         } else {
