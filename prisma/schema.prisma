@@ -119,8 +119,8 @@ model Empleado {
 
 model Formacion { 
   id Int @id @default(autoincrement())
+  observaciones String @db.VarChar(200)
   nombreArchivo String @db.VarChar(100)
-  nombreImagen  String @db.VarChar(100)
   fechaCarga DateTime @db.Date @default(now())
   createAt DateTime @db.Date @default(now()) 
   //Relaciones con otros modelos
@@ -172,8 +172,8 @@ model DiaEconomico {
   observaciones String @db.VarChar(200)
   nombreImagen  String @db.VarChar(100)
   fechaDias DateTime? @db.Date 
-  fechaDiasRestantes DateTime? @db.Date 
-  diasTotales Int? 
+  fechaDiasRestantes Int?
+  diasTotales Int?
   createAt DateTime @db.Date @default(now()) 
   //Relaciones con otros modelos
   empleado Empleado @relation(fields: [empleadoId],references: [id], onDelete: NoAction, onUpdate: NoAction)

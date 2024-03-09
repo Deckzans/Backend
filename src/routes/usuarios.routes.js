@@ -3,7 +3,7 @@ import { usuarioServices } from '../service/index.js'
 import { responsesUtiles } from '../utils/index.js'
 import jwt from 'jsonwebtoken';
 
-const router = Router(); +
+const router = Router(); 
 
     router.get('/', (req, res) => {
         res.send('Hola desde usuariosRouter')
