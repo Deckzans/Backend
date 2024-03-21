@@ -2,6 +2,7 @@ import { Router, json } from 'express';
 import { usuarioServices } from '../service/index.js'
 import { responsesUtiles } from '../utils/index.js'
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const router = Router(); 
 
@@ -12,6 +13,7 @@ const router = Router();
 
 //Ruta para agregar un usuario 
 router.post('/agregar', async (req, res) => {
+    // console.log(req.body)
     try {
         const nuevoUsuario = await usuarioServices.crearUsuario(req.body)
         console.log(nuevoUsuario)
@@ -31,8 +33,8 @@ router.post('/agregar', async (req, res) => {
 
 //ruta para eliminar un usuario
 router.delete('/eliminar/:id', async (req, res) => {
-    const id = parseInt(req.params.id)
     try {
+        const id = parseInt(req.params.id)
         const usuarioEliminado = await usuarioServices.eliminarUsuario(id)
 
         if (usuarioEliminado === null) {
@@ -80,10 +82,11 @@ router.get('/obtener/:id', async (req, res) => {
 
 
 router.put('/editar/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
-    const nuevosDatosUsuario = req.body;  // Asegúrate de que los nuevos datos estén presentes en el cuerpo de la solicitud
-
+    
     try {
+        const id = parseInt(req.params.id);
+        const nuevosDatosUsuario = req.body; 
+
         const usuarioExistente = await usuarioServices.obtenerUsuario(id);
 
         if (usuarioExistente) {
@@ -109,26 +112,39 @@ router.post('/login', async (req, res) => {
         const { username, password } = req.body;
         const usuario = await usuarioServices.obtenerUsuarioPorNombre(username);
 
-        if (usuario && usuario.password === password) {
-            // ... Código para generar el token y enviar una respuesta exitosa ...
-            const token = jwt.sign({
-                usuarioId: usuario.id,
-                usuario: usuario.usuario,
-                rol: usuario.rol,
-            }, "pachanga la changa", { expiresIn: '1h' });
+        if (usuario) {
+            // Comparar la contraseña ingresada con la contraseña hasheada almacenada
+            
+            const match = await bcrypt.compare(password, usuario.password);
 
-            res.status(200).json({
-                success: true,
-                mensaje: 'Inicio de sesión exitoso',
-                data: {
-                    token,
+            if (match) {
+                // Generar el token JWT si las contraseñas coinciden
+                const token = jwt.sign({
+                    usuarioId: usuario.id,
                     usuario: usuario.usuario,
                     rol: usuario.rol,
-                    id: usuario.id
-                },
-            });
+                }, "pachanga la changa", { expiresIn: '1h' });
+
+                res.status(200).json({
+                    success: true,
+                    mensaje: 'Inicio de sesión exitoso',
+                    data: {
+                        token,
+                        usuario: usuario.usuario,
+                        rol: usuario.rol,
+                        id: usuario.id
+                    },
+                });
+            } else {
+                // Enviar una respuesta 401 (Unauthorized) cuando las contraseñas no coinciden
+                res.status(401).json({
+                    success: false,
+                    mensaje: 'Nombre de usuario o contraseña incorrectos',
+                    error: null,
+                });
+            }
         } else {
-            // Enviar una respuesta 401 (Unauthorized) cuando las credenciales no coinciden
+            // Enviar una respuesta 401 (Unauthorized) cuando no se encuentra el usuario
             res.status(401).json({
                 success: false,
                 mensaje: 'Nombre de usuario o contraseña incorrectos',

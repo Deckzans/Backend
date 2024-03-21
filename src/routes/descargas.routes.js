@@ -44,7 +44,7 @@ router.get('/vacaciones/:nombrearchivo', (req, res) => {
         const rutaArchivo = join(__dirname, '..', '..', 'uploads', 'vacaciones', nombrearchivo);
 
         // Configurar el encabezado Content-Disposition para la descarga
-        res.setHeader('Content-Disposition', `attachment; filename=${nombrearchivo}`);
+        res.setHeader('Content-Type', 'application/pdf');
 
         // Enviar la imagen como respuesta
         res.sendFile(rutaArchivo, (err) => {
@@ -71,7 +71,7 @@ router.get('/permisos/:nombrearchivo', (req, res) => {
         const rutaArchivo = join(__dirname, '..', '..', 'uploads', 'permiso', nombrearchivo);
 
         // Configurar el encabezado Content-Disposition para la descarga
-        res.setHeader('Content-Disposition', `attachment; filename=${nombrearchivo}`);
+        res.setHeader('Content-Type', 'application/pdf');
 
         // Enviar la imagen como respuesta
         res.sendFile(rutaArchivo, (err) => {
@@ -97,10 +97,10 @@ router.get('/incapacidad/:nombrearchivo', (req, res) => {
 
         const rutaArchivo = join(__dirname, '..', '..', 'uploads', 'incapacidad', nombrearchivo);
 
-        // Configurar el encabezado Content-Disposition para la descarga
-        res.setHeader('Content-Disposition', `attachment; filename=${nombrearchivo}`);
+        // Configurar el encabezado Content-Type para PDF
+        res.setHeader('Content-Type', 'application/pdf');
 
-        // Enviar la imagen como respuesta
+        // Enviar el archivo como respuesta
         res.sendFile(rutaArchivo, (err) => {
             if (err) {
                 console.error('Error al enviar el archivo:', err);
@@ -124,8 +124,8 @@ router.get('/dia/:nombrearchivo', (req, res) => {
 
         const rutaArchivo = join(__dirname, '..', '..', 'uploads', 'dia', nombrearchivo);
 
-        // Configurar el encabezado Content-Disposition para la descarga
-        res.setHeader('Content-Disposition', `attachment; filename=${nombrearchivo}`);
+        // // Configurar el encabezado Content-Disposition para la descarga
+        res.setHeader('Content-Type', 'application/pdf');
 
         // Enviar la imagen como respuesta
         res.sendFile(rutaArchivo, (err) => {
@@ -152,7 +152,7 @@ router.get('/formacion/:nombrearchivo', (req, res) => {
         const rutaArchivo = join(__dirname, '..', '..', 'uploads', 'fomracion', nombrearchivo);
 
         // Configurar el encabezado Content-Disposition para la descarga
-        res.setHeader('Content-Disposition', `attachment; filename=${nombrearchivo}`);
+        res.setHeader('Content-Type', 'application/pdf');
 
         // Enviar la imagen como respuesta
         res.sendFile(rutaArchivo, (err) => {

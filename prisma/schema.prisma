@@ -32,7 +32,6 @@ enum Estado_civil {
   casado
   divorciado 
   viudo
-  juntado
 }
 
 enum Status { 
@@ -45,7 +44,7 @@ model Usuario {
   id Int @id @default(autoincrement()) 
   nombre String? @db.VarChar(45) 
   area String? @db.VarChar(45) 
-  password String @db.VarChar(45) 
+  password String @db.VarChar(200) 
   rol Rol @default(estandar) 
   usuario String @unique @db.VarChar(45) 
   createAt DateTime @db.Date @default(now()) 

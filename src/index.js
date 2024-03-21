@@ -7,6 +7,10 @@ import cors from 'cors'
 import usuariosRoutes from './routes/usuarios.routes.js'
 import empleadoRoutes from './routes/empleado.routes.js'
 import accionesRoutes from './routes/accionEmpleado.routes.js'
+import eliminarDocumentos from './routes/eliminarDocumento.routes.js'
+import eliminarDocumentoServidor from './routes/eliminarDocumentoServidor.routes.js'
+import obtenerDocumentos from './routes/obtenerDocumentoId.routes.js'
+import editarDocumentos from './routes/editarDocumentos.routes.js'
 import descargarRoutes from './routes/descargas.routes.js'
 
 
@@ -22,6 +26,10 @@ app.use(cors());
 app.use('/usuario',usuariosRoutes)
 app.use('/empleado',empleadoRoutes)
 app.use('/accion',accionesRoutes)
+app.use('/eliminarDoc',eliminarDocumentos)
+app.use('/eliminarDocServer',eliminarDocumentoServidor)
+app.use('/obtenerDoc',obtenerDocumentos)
+app.use('/editarDoc',editarDocumentos)
 app.use('/descargar',descargarRoutes)
 
   

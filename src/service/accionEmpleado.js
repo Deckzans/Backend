@@ -115,6 +115,7 @@ export const crearFormacion = async (datosFormacion) => {
       return null;
     }
   };
+
    export const obtenerFormacion = async (empleadoId) => {
     try {
       const registros = await formacionModel.findMany({
@@ -137,6 +138,8 @@ export const crearFormacion = async (datosFormacion) => {
       return null;
     }
   };
+
+  
 
 
 
