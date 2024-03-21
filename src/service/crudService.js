@@ -54,23 +54,29 @@ export const eliminarRegistroPorId = async (modelo, id) => {
   try {
     const registroExistente = await obtenerRegistroPorId(modelo, id);
 
-    if (registroExistente) {
-      const registroEliminado = await modelo.delete({
-        where: {
-          id: id,
-        },
-      });
-      return registroEliminado;
-    } else {
+    if (!registroExistente) {
       console.log('La entidad no existe, no se puede eliminar.');
-      return null;
+      return { success: false, message: 'La entidad no existe, no se puede eliminar.' };
     }
+
+    const registroEliminado = await modelo.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { success: true, message: 'Registro eliminado correctamente.' };
   } catch (error) {
-    console.error(`Error al intentar eliminar el registro por ID: ${error.message}`);
-    // No detendremos la aplicación, simplemente devolveremos null
-    return null;
+    if (error.code === 'P2003' || error.code === 'ER_ROW_IS_REFERENCED_2') {
+      console.log('No se puede eliminar el usuario debido a restricciones de clave externa.');
+      return { success: false, message: 'No se puede eliminar el usuario debido a restricciones de clave externa.' };
+    } else {
+      console.error(`Error al intentar eliminar el registro por ID: ${error.message}`);
+      return { success: false, message: 'Error al intentar eliminar el registro.' };
+    }
   }
 };
+
 
 // Función genérica para editar un registro por ID
 export const editarRegistroPorId = async (modelo, id, nuevosDatos) => {
@@ -90,9 +96,13 @@ export const editarRegistroPorId = async (modelo, id, nuevosDatos) => {
       return null;
     }
   } catch (error) {
-    console.error(`Error al intentar editar el registro por ID: ${error.message}`);
-    // No detendremos la aplicación, simplemente devolveremos null
-    return null;
+    if (error.code === 'P2003') { // Código de error para restricción de clave externa en Prisma
+      console.log('No se puede editar debido a restricciones de clave externa.');
+      return null;
+    } else {
+      console.error(`Error al intentar editar el registro por ID: ${error.message}`);
+      return null;
+    }
   }
 };
 

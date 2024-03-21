@@ -34,21 +34,24 @@ router.post('/agregar', async (req, res) => {
 //ruta para eliminar un usuario
 router.delete('/eliminar/:id', async (req, res) => {
     try {
-        const id = parseInt(req.params.id)
-        const usuarioEliminado = await usuarioServices.eliminarUsuario(id)
+        const id = parseInt(req.params.id);
+        const resultadoEliminacion = await usuarioServices.eliminarUsuario(id);
 
-        if (usuarioEliminado === null) {
-            responsesUtiles.manejarEntidadNoEncontrada(res, id);
-        } else if (usuarioEliminado !== true) {
-            responsesUtiles.OperacionExitosa(res, usuarioEliminado, 'Usuario eliminado exitosamente');
+        if (!resultadoEliminacion.success) {
+            if (resultadoEliminacion.message === 'La entidad no existe, no se puede eliminar.') {
+                responsesUtiles.manejarEntidadNoEncontrada(res, id);
+            } else if (resultadoEliminacion.message === 'No se puede eliminar el usuario debido a restricciones de clave externa.') {
+                responsesUtiles.manejarError(res, resultadoEliminacion.message, 'No se puede realizar la acción debido a restricciones de clave externa.', 403);
+            } else {
+                responsesUtiles.manejarError(res, resultadoEliminacion.message, 'Error al intentar eliminar un usuario');
+            }
         } else {
-            responsesUtiles.manejarError(res, 'Error al eliminar el usuario');
+            responsesUtiles.OperacionExitosa(res, null, 'Usuario eliminado exitosamente');
         }
-
     } catch (error) {
-        responsesUtiles.manejarError(res, error, 'error al intentar eliminar un usuario')
+        responsesUtiles.manejarError(res, error, 'Error al intentar eliminar un usuario');
     }
-})
+});
 
 router.get('/obtenerTodo', async (req, res) => {
 

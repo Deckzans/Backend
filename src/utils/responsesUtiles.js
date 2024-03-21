@@ -7,11 +7,12 @@ export const OperacionExitosa = (res, data = null, mensaje = 'Operación exitosa
   });
 };
 
-export const manejarError = (res, error, mensaje = 'la operación no se puede realizar',  status = 500) => {
+export const manejarError = (res, error, mensaje = 'La operación no se puede realizar', status = 500) => {
   res.status(status).send({
     success: false,
     mensaje: mensaje,
     error: error.message || error,
+    status: status // Se incluye el código de estado proporcionado en la respuesta
   });
 };
 
@@ -20,6 +21,6 @@ export const manejarEntidadNoEncontrada = (res, id, entidad = 'Usuario') => {
   res.status(404).send({
     success: false,
     mensaje: `La entidad con ID ${id} no existe, no se puede realizar la acción.`,
-    error: null,
+    error: error,
   });
 };
